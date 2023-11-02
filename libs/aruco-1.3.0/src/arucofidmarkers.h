@@ -28,15 +28,15 @@ or implied, of Rafael Muñoz Salinas.
 
 #ifndef ArucoFiducicalMarkerDetector_H
 #define ArucoFiducicalMarkerDetector_H
-#include <opencv2/core/core.hpp>
+#include "board.h"
 #include "exports.h"
 #include "marker.h"
-#include "board.h"
+#include <opencv2/core/core.hpp>
 namespace aruco {
 
 class ARUCO_EXPORTS FiducidalMarkers {
-  public:
-    /**
+public:
+	/**
     * \brief Creates an ar marker with the id specified using a modified version of the hamming code.
     * There are two type of markers: a) These of 10 bits b) these of 3 bits. The latter are employed for applications
     * that need few marker but they must be small.  The two type of markers are distinguished by their ids. While the first type
@@ -64,42 +64,40 @@ class ARUCO_EXPORTS FiducidalMarkers {
     * @param writeIdWaterMark if true, writes a watermark with the marker id
     * @param locked if true, creates etra rectangles lcoking the corners of the marker (new in version 1.2.6)
     */
-    static cv::Mat createMarkerImage(int id, int size, bool writeIdWaterMark = true, bool locked = false) throw(cv::Exception);
+	static cv::Mat createMarkerImage(int id, int size, bool writeIdWaterMark = true, bool locked = false);
 
-    /** Detection of fiducidal aruco markers (10 bits)
+	/** Detection of fiducidal aruco markers (10 bits)
      * @param in input image with the patch that contains the possible marker
      * @param nRotations number of 90deg rotations in clockwise direction needed to set the marker in correct position
      * @return -1 if the image passed is a not a valid marker, and its id in case it really is a marker
      */
-    static int detect(const cv::Mat &in, int &nRotations);
+	static int detect(const cv::Mat & in, int & nRotations);
 
-    /**Similar to createMarkerImage. Instead of returning a visible image, returns a 8UC1 matrix of 0s and 1s with the marker info
+	/**Similar to createMarkerImage. Instead of returning a visible image, returns a 8UC1 matrix of 0s and 1s with the marker info
      */
-    static cv::Mat getMarkerMat(int id) throw(cv::Exception);
+	static cv::Mat getMarkerMat(int id);
 
-
-    /**Creates a printable image of a board
+	/**Creates a printable image of a board
      * @param gridSize grid layout (numer of sqaures in x and Y)
      * @param MarkerSize size of markers sides in pixels
      * @param MarkerDistance distance between the markers
       * @param TInfo output
      * @param excludedIds set of ids excluded from the board
      */
-    static cv::Mat createBoardImage(cv::Size gridSize, int MarkerSize, int MarkerDistance, BoardConfiguration &TInfo,
-                                    vector< int > *excludedIds = NULL) throw(cv::Exception);
+	static cv::Mat createBoardImage(cv::Size gridSize, int MarkerSize, int MarkerDistance, BoardConfiguration & TInfo,
+		vector<int> * excludedIds = NULL);
 
-
-    /**Creates a printable image of a board in chessboard_like manner
+	/**Creates a printable image of a board in chessboard_like manner
      * @param gridSize grid layout (numer of sqaures in x and Y)
      * @param MarkerSize size of markers sides in pixels
       * @param TInfo output
      * @param setDataCentered indicates if the center is set at the center of the board. Otherwise it is the left-upper corner
      *
      */
-    static cv::Mat createBoardImage_ChessBoard(cv::Size gridSize, int MarkerSize, BoardConfiguration &TInfo, bool setDataCentered = true,
-                                               vector< int > *excludedIds = NULL) throw(cv::Exception);
+	static cv::Mat createBoardImage_ChessBoard(cv::Size gridSize, int MarkerSize, BoardConfiguration & TInfo, bool setDataCentered = true,
+		vector<int> * excludedIds = NULL);
 
-    /**Creates a printable image of a board in a frame fashion
+	/**Creates a printable image of a board in a frame fashion
      * @param gridSize grid layout (numer of sqaures in x and Y)
      * @param MarkerSize size of markers sides in pixels
      * @param MarkerDistance distance between the markers
@@ -107,15 +105,15 @@ class ARUCO_EXPORTS FiducidalMarkers {
      * @param setDataCentered indicates if the center is set at the center of the board. Otherwise it is the left-upper corner
      *
      */
-    static cv::Mat createBoardImage_Frame(cv::Size gridSize, int MarkerSize, int MarkerDistance, BoardConfiguration &TInfo, bool setDataCentered = true,
-                                          vector< int > *excludedIds = NULL) throw(cv::Exception);
+	static cv::Mat createBoardImage_Frame(cv::Size gridSize, int MarkerSize, int MarkerDistance, BoardConfiguration & TInfo, bool setDataCentered = true,
+		vector<int> * excludedIds = NULL);
 
-  private:
-    static vector< int > getListOfValidMarkersIds_random(int nMarkers, vector< int > *excluded) throw(cv::Exception);
-    static cv::Mat rotate(const cv::Mat &in);
-    static int hammDistMarker(cv::Mat bits);
-    static int analyzeMarkerImage(cv::Mat &grey, int &nRotations);
-    static bool correctHammMarker(cv::Mat &bits);
+private:
+	static vector<int> getListOfValidMarkersIds_random(int nMarkers, vector<int> * excluded);
+	static cv::Mat rotate(const cv::Mat & in);
+	static int hammDistMarker(cv::Mat bits);
+	static int analyzeMarkerImage(cv::Mat & grey, int & nRotations);
+	static bool correctHammMarker(cv::Mat & bits);
 };
 }
 

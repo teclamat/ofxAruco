@@ -27,11 +27,11 @@ or implied, of Rafael Muñoz Salinas.
 ********************************/
 #ifndef _Aruco_BoardDetector_H
 #define _Aruco_BoardDetector_H
-#include <opencv2/core/core.hpp>
-#include "exports.h"
 #include "board.h"
 #include "cameraparameters.h"
+#include "exports.h"
 #include "markerdetector.h"
+#include <opencv2/core/core.hpp>
 using namespace std;
 
 namespace aruco {
@@ -62,37 +62,35 @@ namespace aruco {
  *
 */
 class ARUCO_EXPORTS BoardDetector {
-  public:
-    /** See discussion in @see enableRotateXAxis.
+public:
+	/** See discussion in @see enableRotateXAxis.
      * Do not change unless you know what you are doing
      */
-    BoardDetector(bool setYPerpendicular = false);
+	BoardDetector(bool setYPerpendicular = false);
 
-
-    /**
+	/**
      * Use if you plan to let this class to perform marker detection too
      */
-    void setParams(const BoardConfiguration &bc, const CameraParameters &cp, float markerSizeMeters = -1);
-    void setParams(const BoardConfiguration &bc);
-    /**
+	void setParams(const BoardConfiguration & bc, const CameraParameters & cp, float markerSizeMeters = -1);
+	void setParams(const BoardConfiguration & bc);
+	/**
      * Detect markers, and then, look for the board indicated in setParams()
      * @return value indicating  the  likelihood of having found the marker
      */
-    float detect(const cv::Mat &im) throw(cv::Exception);
-    /**Returns a reference to the board detected
+	float detect(const cv::Mat & im);
+	/**Returns a reference to the board detected
      */
-    Board &getDetectedBoard() { return _boardDetected; }
-    /**Returns a reference to the internal marker detector
+	Board & getDetectedBoard() { return _boardDetected; }
+	/**Returns a reference to the internal marker detector
      */
-    MarkerDetector &getMarkerDetector() { return _mdetector; }
-    /**Returns the vector of markers detected
+	MarkerDetector & getMarkerDetector() { return _mdetector; }
+	/**Returns the vector of markers detected
      */
-    vector< Marker > &getDetectedMarkers() { return _vmarkers; }
+	vector<Marker> & getDetectedMarkers() { return _vmarkers; }
 
+	// ALTERNATIVE DETECTION METHOD, BASED ON MARKERS PREVIOUSLY DETECTED
 
-    // ALTERNATIVE DETECTION METHOD, BASED ON MARKERS PREVIOUSLY DETECTED
-
-    /** Given the markers detected, determines if there is the board passed
+	/** Given the markers detected, determines if there is the board passed
     * @param detectedMarkers result provided by aruco::ArMarkerDetector
     * @param BConf the board you want to see if is present
     * @param Bdetected output information of the detected board
@@ -103,49 +101,48 @@ class ARUCO_EXPORTS BoardDetector {
     * @param markerSizeMeters size of the marker sides expressed in meters
     * @return value indicating  the  likelihood of having found the marker
     */
-    float detect(const vector< Marker > &detectedMarkers, const BoardConfiguration &BConf, Board &Bdetected, cv::Mat camMatrix = cv::Mat(),
-                 cv::Mat distCoeff = cv::Mat(), float markerSizeMeters = -1) throw(cv::Exception);
-    float detect(const vector< Marker > &detectedMarkers, const BoardConfiguration &BConf, Board &Bdetected, const CameraParameters &cp,
-                 float markerSizeMeters = -1) throw(cv::Exception);
+	float detect(const vector<Marker> & detectedMarkers, const BoardConfiguration & BConf, Board & Bdetected, cv::Mat camMatrix = cv::Mat(),
+		cv::Mat distCoeff = cv::Mat(), float markerSizeMeters = -1);
+	float detect(const vector<Marker> & detectedMarkers, const BoardConfiguration & BConf, Board & Bdetected, const CameraParameters & cp,
+		float markerSizeMeters = -1);
 
-    /**Static version (all in one). Detects the board indicated
+	/**Static version (all in one). Detects the board indicated
    * @param Image input image
    * @param bc the board you want to see if is present
    * @param cp camera parameters
    * @param markerSizeMeters size of the marker sides expressed in meters (not needed in the board is expressed in meters)
    * @return Board detected
    */
-    static Board detect(const cv::Mat &Image, const BoardConfiguration &bc, const CameraParameters &cp, float markerSizeMeters = -1);
+	static Board detect(const cv::Mat & Image, const BoardConfiguration & bc, const CameraParameters & cp, float markerSizeMeters = -1);
 
-    /**
+	/**
      * By default, the Y axis is set to point up. However this is not the default
      * operation mode of opencv, which produces the Z axis pointing up instead.
      * So, to achieve this change, we have to rotate the X axis.
      */
-    void setYPerpendicular(bool enable) { _setYPerpendicular = enable; }
-    void setYPerperdicular(bool enable) { setYPerpendicular(enable); } // TODO mark as deprecated
-    bool isYPerpendicular() { return _setYPerpendicular; }
+	void setYPerpendicular(bool enable) { _setYPerpendicular = enable; }
+	void setYPerperdicular(bool enable) { setYPerpendicular(enable); } // TODO mark as deprecated
+	bool isYPerpendicular() { return _setYPerpendicular; }
 
-    /**Sets the threshold for reprjection test. Pixels that after  estimating the camera location
+	/**Sets the threshold for reprjection test. Pixels that after  estimating the camera location
      * projects 'repj_err_thres' pixels farther from its original location are discarded as outliers.
      * By default it is set to -1, meaning that not reprojection test is performed
      */
-    void set_repj_err_thres(float Repj_err_thres) { repj_err_thres = Repj_err_thres; }
-    float get_repj_err_thres() const { return repj_err_thres; }
+	void set_repj_err_thres(float Repj_err_thres) { repj_err_thres = Repj_err_thres; }
+	float get_repj_err_thres() const { return repj_err_thres; }
 
+private:
+	void rotateXAxis(cv::Mat & rotation);
+	bool _setYPerpendicular;
 
-  private:
-    void rotateXAxis(cv::Mat &rotation);
-    bool _setYPerpendicular;
-
-    //-- Functionality to detect markers inside
-    bool _areParamsSet;
-    BoardConfiguration _bconf;
-    Board _boardDetected;
-    float _markerSize, repj_err_thres;
-    CameraParameters _camParams;
-    MarkerDetector _mdetector; // internal markerdetector
-    vector< Marker > _vmarkers; // markers detected in the call to : float  detect(const cv::Mat &im);
+	//-- Functionality to detect markers inside
+	bool _areParamsSet;
+	BoardConfiguration _bconf;
+	Board _boardDetected;
+	float _markerSize, repj_err_thres;
+	CameraParameters _camParams;
+	MarkerDetector _mdetector; // internal markerdetector
+	vector<Marker> _vmarkers; // markers detected in the call to : float  detect(const cv::Mat &im);
 };
 };
 #endif

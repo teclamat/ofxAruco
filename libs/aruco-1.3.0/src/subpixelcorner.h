@@ -6,27 +6,27 @@
 namespace aruco {
 
 class SubPixelCorner {
-  private:
-    int _winSize;
-    int _apertureSize;
-    cv::TermCriteria _term;
-    double eps;
-    cv::Mat mask;
-    int _max_iters;
+private:
+	int _winSize;
+	int _apertureSize;
+	cv::TermCriteria _term;
+	double eps;
+	cv::Mat mask;
+	int _max_iters;
 
-  public:
-    bool enable;
-    SubPixelCorner();
+public:
+	bool enable;
+	SubPixelCorner();
 
-    void checkTerm();
+	void checkTerm();
 
-    double pointDist(cv::Point2f estimate_corner, cv::Point2f curr_corner);
+	double pointDist(cv::Point2f estimate_corner, cv::Point2f curr_corner);
 
-    /// method to refine the corners
-    void RefineCorner(cv::Mat image, std::vector< cv::Point2f > &corners);
+	/// method to refine the corners
+	void RefineCorner(cv::Mat image, std::vector<cv::Point2f> & corners);
 
-    // function to generate the mask
-    void generateMask();
+	// function to generate the mask
+	void generateMask();
 };
 }
 

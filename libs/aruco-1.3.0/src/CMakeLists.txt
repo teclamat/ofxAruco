@@ -1,11 +1,8 @@
-INCLUDE_DIRECTORIES(.)
 FILE(GLOB hdrs "*.h*")
 FILE(GLOB srcs "*.c*")
 
-
 SET(hdrs ${hdrs})
 SET(srcs ${srcs})
-
 
 ADD_LIBRARY(${PROJECT_NAME} ${srcs} ${hdrs})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} )
@@ -19,6 +16,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES 				# create *nix style library
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${REQUIRED_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 INSTALL(TARGETS ${PROJECT_NAME}
 	RUNTIME DESTINATION bin COMPONENT main			# Install the dll file in bin directory
@@ -28,4 +26,3 @@ INSTALL(TARGETS ${PROJECT_NAME}
 INSTALL(FILES ${hdrs}
 	DESTINATION include/${PROJECT_NAME}
 	COMPONENT main)
-

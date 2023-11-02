@@ -1,16 +1,11 @@
 # ----------------------------------------------------------------------------
 #   Basic Configuration
 # ----------------------------------------------------------------------------
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+cmake_minimum_required(VERSION 3.5)
 
-PROJECT(aruco)
-set(PROJECT_VERSION "1.3.0")
-string(REGEX MATCHALL "[0-9]" PROJECT_VERSION_PARTS "${PROJECT_VERSION}")
-list(GET PROJECT_VERSION_PARTS 0 PROJECT_VERSION_MAJOR)
-list(GET PROJECT_VERSION_PARTS 1 PROJECT_VERSION_MINOR)
-list(GET PROJECT_VERSION_PARTS 2 PROJECT_VERSION_PATCH)
+project(aruco VERSION 1.3.0 LANGUAGES CXX)
+
 set(PROJECT_SOVERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
-
 
 #------------------------------------------------------
 # Build type
@@ -35,19 +30,19 @@ if(WIN32)
     OPTION(BUILD_GLSAMPLES 	"Set to OFF to build static libraries" OFF)
 else()
     # Postfix of so's:
-    set(PROJECT_DLLVERSION)   
-    OPTION(BUILD_GLSAMPLES 	"Set to OFF to build static libraries" ON)
+    set(PROJECT_DLLVERSION)
+    OPTION(BUILD_GLSAMPLES 	"Set to OFF to build static libraries" OFF)
 #    SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_INSTALL_PREFIX}/lib/cmake/ /usr/lib/cmake)
 endif()
 
-OPTION(BUILD_UTILS	"Set to OFF to not compile utils " ON)
-OPTION(BUILD_SHARED_LIBS 	"Set to OFF to build static libraries" ON)
+OPTION(BUILD_UTILS	"Set to OFF to not compile utils " OFF)
+OPTION(BUILD_SHARED_LIBS 	"Set to OFF to build static libraries" OFF)
 
 # ----------------------------------------------------------------------------
 #   Find Dependencies
 # ----------------------------------------------------------------------------
 
-FIND_PACKAGE(OpenCV 	REQUIRED )
+find_package(OpenCV REQUIRED)
 set (REQUIRED_LIBRARIES ${OpenCV_LIBS})
 INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 
@@ -87,12 +82,13 @@ ENDIF()
 
 
 if(WIN32)
- 
+
 ELSE()
-find_package(OpenMP  )
+find_package(OpenMP)
 if (OPENMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    list(APPEND REQUIRED_LIBRARIES OpenMP::OpenMP_CXX)
 add_definitions(-DUSE_OMP)
 endif()
 ENDIF()
@@ -321,6 +317,6 @@ MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS )
 
 # pkg-config
-configure_file(aruco.pc.in aruco.pc @ONLY)
-configure_file(aruco-uninstalled.pc.in aruco-uninstalled.pc @ONLY)
-install(FILES "${PROJECT_BINARY_DIR}/aruco-uninstalled.pc" "${PROJECT_BINARY_DIR}/aruco.pc" DESTINATION lib/pkgconfig)
+# configure_file(aruco.pc.in aruco.pc @ONLY)
+# configure_file(aruco-uninstalled.pc.in aruco-uninstalled.pc @ONLY)
+# install(FILES "${PROJECT_BINARY_DIR}/aruco-uninstalled.pc" "${PROJECT_BINARY_DIR}/aruco.pc" DESTINATION lib/pkgconfig)
